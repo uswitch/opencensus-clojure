@@ -1,6 +1,6 @@
 (def base-version "0.1")
 
-(defproject uswitch/opencensus-clojure (str base-version (if-let[number (System/getenv "DRONE_BUILD_NUMBER")] (str "." number) "-SNAPSHOT")))
+(defproject uswitch/opencensus-clojure (str base-version (if-let[number (System/getenv "DRONE_BUILD_NUMBER")] (str "." number) "-SNAPSHOT"))
   :description "wraps opencensus-java"
   :url "https://github.com/uswitch/opencensus-java"
   :scm  {:name "git"

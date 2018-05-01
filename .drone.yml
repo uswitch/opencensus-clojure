@@ -1,6 +1,7 @@
 pipeline:
   release:
     image: registry.usw.co/uswitch/clojure
+    secrets: [ CLOJARS_USERNAME, CLOJARS_PASSWORD ]
     when:
       branch: master
       event: push

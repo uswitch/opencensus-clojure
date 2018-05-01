@@ -1,0 +1,10 @@
+pipeline:
+  release:
+    image: registry.usw.co/uswitch/clojure
+    when:
+      branch: master
+      event: push
+    commands:
+      - lein deps
+      - lein jar
+      - lein deploy clojars

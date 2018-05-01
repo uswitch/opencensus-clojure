@@ -1,4 +1,4 @@
-(defproject opencensus-clojure "0.1.0"
+(defproject uswitch/opencensus-clojure "0.1.0"
   :description "wraps opencensus-java"
   :url "https://github.com/uswitch/opencensus-java"
   :scm  {:name "git"
@@ -10,4 +10,6 @@
                  [io.opencensus/opencensus-exporter-trace-logging "0.13.0"]
                  [io.opencensus/opencensus-impl "0.13.0" :scope "runtime"]
                  [io.opencensus/opencensus-exporter-trace-jaeger "0.13.0"]]
-  :deploy-repositories [["clojars" {:creds :gpg}]])
+
+  :deploy-repositories [["clojars" {:username [:gpg :env/clojars_username]
+                                    :password [:gpg :env/clojars_password]}]])

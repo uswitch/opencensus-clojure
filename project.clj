@@ -13,6 +13,6 @@
                  [io.opencensus/opencensus-impl "0.13.0" :scope "runtime"]
                  [io.opencensus/opencensus-exporter-trace-jaeger "0.13.0"]]
 
-  :deploy-repositories [["clojars" {:sign-releases false
-                                    :username [:gpg :env/clojars_username]
-                                    :password [:gpg :env/clojars_password]}]])
+  :repositories [["clojars" {:sign-releases false
+                             :username [:gpg :env/clojars_username]
+                             :password [:gpg :env/clojars_password]}]])

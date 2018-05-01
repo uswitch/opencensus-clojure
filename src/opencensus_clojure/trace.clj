@@ -18,10 +18,7 @@
 
 (defmacro span
   ([span-name code]
-   `(let [span-builder# (-> tracer
-                            (.spanBuilder ~span-name)
-                            (.setRecordEvents true)
-                            (.setSampler (Samplers/alwaysSample)))]
+   `(let [span-builder# (.spanBuilder tracer ~span-name)]
       (with-open [scope# (.startScopedSpan span-builder#)]
         (binding [current-span (.getCurrentSpan tracer)]
           ~code))))

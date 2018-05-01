@@ -91,3 +91,9 @@ This relies on
  Async Ring and other green thread stuff will probably get funny.
  OpenCensus supports directly passing in parent spans etc., and we can extend it to be 
  async/threading-compatible if there's actual demand.
+
+# License
+
+Copyright © 2018 uSwitch
+
+Distributed under the Eclipse Public License, the same as Clojure.

@@ -2,6 +2,10 @@
 
 A Clojure library designed to pass butter.
 
+****
+**NOTE**: this is __**alpha**__ software under active development; here be dragons.
+****
+
 ## Usage
 
 ### Ring
@@ -24,9 +28,6 @@ There's a ringleware that you can use like this
 (-> handlers
   (wrap-tracing (fn [req] (-> req :uri (str/replace #"/" "🦄")))))
 
-; The traces are probabilistic by default. This will force a sample, so you can actually see things in dev.
-(-> handlers
-  (wrap-tracing (constantly "i-dont-care") (debug-this-request?)))
 ```
 
 It also adds a tag with the response status by default.
@@ -54,6 +55,22 @@ being measured.
 The nesting is handled by magic under the bonnet, so you **can** literally just wrap ring and then do these
 `span`s in your DB layer, and get nice nested timings out of this.
 
+### Distributed tracing
+
+The ring middleware will automagically pick up Zipkin B3 format headers and assign the remote context if it finds one.
+
+To pass trace IDs downstream, use `(opencensus-clojure.trace/make-downstream-headers)` anywhere within a traced context.
+
+Example:
+```clojure
+(span "foobar"
+  (http-kit/get "http://google.com/all-your-base"
+                {:headers (trace/make-downstream-headers)}))
+```
+
+As above, keep in mind that Ring already wraps a span, so you can do this pretty much anywhere within your app.
+The function returns a `{str str}`, which is what most HTTP clients understand
+
 ### Reporting
 
 There are two reporters available, the `logging` one,
@@ -79,6 +96,18 @@ $ docker run --rm -i \
   jaegertracing/all-in-one:latest
 ```
 It should come up with a UI on `localhost:16686`, and you should see all your traces there.
+
+#### Configuration
+
+The traces are probabilistic by default; you can configure the tracer to `p=1.0` via
+```clojure
+(opencensus-clojure.trace/configure-tracer {:probability 1.0})
+```
+to force sampling. The configuration function also takes
+- max-annotations
+- max-attributes
+- max-links
+- max-message-events
 
 ## Disclaimer
 

@@ -1,4 +1,4 @@
-(def base-version "0.1")
+(def base-version "0.2")
 
 (defproject uswitch/opencensus-clojure (str base-version (if-let [number (System/getenv "DRONE_BUILD_NUMBER")] (str "." number) "-SNAPSHOT"))
   :description "wraps opencensus-java"
@@ -11,6 +11,7 @@
                  [io.opencensus/opencensus-api "0.13.0"]
                  [io.opencensus/opencensus-exporter-trace-logging "0.13.0"]
                  [io.opencensus/opencensus-impl "0.13.0" :scope "runtime"]
+                 [org.clojure/tools.logging "0.4.0"]
                  [io.opencensus/opencensus-exporter-trace-jaeger "0.13.0"]]
 
   :repositories [["clojars" {:sign-releases false

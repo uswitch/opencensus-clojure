@@ -26,15 +26,27 @@
         (.setMaxNumberOfMessageEvents new-params-builder max-message-events))
       (.updateActiveTraceParams trace-config (.build new-params-builder)))))
 
+(defn value->AttributeValue
+  [v]
+  (cond
+    (int? v) (AttributeValue/longAttributeValue v)
+    (boolean? v) (AttributeValue/booleanAttributeValue v)
+    :else (AttributeValue/stringAttributeValue (str v))))
+
 (defn add-tag
   [k v]
   (.putAttribute
     current-span
     k
-    (cond
-      (int? v) (AttributeValue/longAttributeValue v)
-      (boolean? v) (AttributeValue/booleanAttributeValue v)
-      :else (AttributeValue/stringAttributeValue (str v)))))
+    (value->AttributeValue v)))
+
+(defn add-tags
+  [tags]
+  (.putAttributes
+    current-span
+    (->> tags
+         (map (fn [[k v]] [k (value->AttributeValue v)]))
+         (into {}))))
 
 (defn make-downstream-headers
   []

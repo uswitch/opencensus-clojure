@@ -1,5 +1,6 @@
 (ns opencensus-clojure.trace
-  (:require [opencensus-clojure.propagation :refer [b3-setter]])
+  (:require [opencensus-clojure.propagation :refer [b3-setter]]
+            [clojure.tools.logging :as log])
   (:import (io.opencensus.trace Tracing AttributeValue)
            (io.opencensus.trace.samplers Samplers)))
 
@@ -45,12 +46,14 @@
 (defmacro span
   ([span-name code]
    `(let [span-builder# (.spanBuilder tracer ~span-name)]
+      (log/debug "building span " ~span-name)
       (with-open [scope# (.startScopedSpan span-builder#)]
         (binding [current-span (.getCurrentSpan tracer)]
           ~code))))
 
   ([span-name code remote]
    `(let [span-builder# (.spanBuilderWithRemoteParent tracer ~span-name ~remote)]
+      (log/debug "building span " ~span-name " with remote parent")
       (with-open [scope# (.startScopedSpan span-builder#)]
         (binding [current-span (.getCurrentSpan tracer)]
           ~code)))))

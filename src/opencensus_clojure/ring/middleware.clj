@@ -5,7 +5,7 @@
   (:import (io.opencensus.trace Tracing)))
 
 (defn extract-remote-span [{:keys [headers] :as request}]
-  (when (get headers "x-b3-spanid")
+  (when (get headers "x-b3-traceid")
     (logging/debug "found x-b3-spanid, extracting remote context")
     (let [b3-format (-> (Tracing/getPropagationComponent) (.getB3Format))]
       (.extract b3-format request ring-b3-getter))))

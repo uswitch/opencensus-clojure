@@ -1,4 +1,6 @@
 (ns opencensus-clojure.trace
+  (:require [opencensus-clojure.propagation :refer [b3-setter]]
+            [clojure.tools.logging :as log])
   (:import (io.opencensus.trace Tracing AttributeValue)
            (io.opencensus.trace.samplers Samplers)))
 
@@ -34,20 +36,24 @@
       (boolean? v) (AttributeValue/booleanAttributeValue v)
       :else (AttributeValue/stringAttributeValue (str v)))))
 
+(defn make-downstream-headers
+  []
+  (let [b3-format (-> (Tracing/getPropagationComponent) (.getB3Format))
+        builder (transient {})]
+    (.inject b3-format (.getContext current-span) builder b3-setter)
+    (persistent! builder)))
+
 (defmacro span
   ([span-name code]
    `(let [span-builder# (.spanBuilder tracer ~span-name)]
+      (log/debug "building span " ~span-name)
       (with-open [scope# (.startScopedSpan span-builder#)]
         (binding [current-span (.getCurrentSpan tracer)]
           ~code))))
 
-  ([span-name code debug?]
-   `(let [span-builder# (.spanBuilder tracer ~span-name)
-          scope-builder# (if ~debug?
-                           (-> span-builder#
-                               (.setRecordEvents true)
-                               (.setSampler (Samplers/alwaysSample)))
-                           span-builder#)]
-      (with-open [scope# (.startScopedSpan scope-builder#)]
+  ([span-name code remote]
+   `(let [span-builder# (.spanBuilderWithRemoteParent tracer ~span-name ~remote)]
+      (log/debug "building span " ~span-name " with remote parent")
+      (with-open [scope# (.startScopedSpan span-builder#)]
         (binding [current-span (.getCurrentSpan tracer)]
           ~code)))))

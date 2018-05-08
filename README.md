@@ -8,6 +8,12 @@ A Clojure library designed to pass butter.
 
 ## Usage
 
+## Dependency
+
+Add the latest `uswitch/opencensus-clojure` to your build tool of choice, **AND** add your preferred exporter lib, e.g.,
+`[io.opencensus/opencensus-exporter-trace-zipkin "0.13.1"]`. This is because there are at least 5 exporters and we don't
+want to pull in a boatload of unneeded transitives.
+
 ### Ring
 There's a ringleware that you can use like this
 ```clojure

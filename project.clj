@@ -9,10 +9,11 @@
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.9.0" :scope "provided"]
                  [org.clojure/tools.logging "0.4.0"]
-                 [io.opencensus/opencensus-api "0.13.0"]
-                 [io.opencensus/opencensus-exporter-trace-logging "0.13.0"]
-                 [io.opencensus/opencensus-impl "0.13.0" :scope "runtime"]
-                 [io.opencensus/opencensus-exporter-trace-jaeger "0.13.0"]]
+                 [io.opencensus/opencensus-api "0.13.1"]
+                 [io.opencensus/opencensus-impl "0.13.1" :scope "runtime"]
+                 [io.opencensus/opencensus-exporter-trace-logging "0.13.1" :scope "provided"]
+                 [io.opencensus/opencensus-exporter-trace-jaeger "0.13.1" :scope "provided"]
+                 [io.opencensus/opencensus-exporter-trace-zipkin "0.13.1" :scope "provided"]]
 
   :repositories [["clojars" {:sign-releases false
                              :username      [:gpg :env/clojars_username]

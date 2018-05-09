@@ -1,15 +1,17 @@
 (ns opencensus-clojure.trace
   (:require [opencensus-clojure.propagation :refer [b3-setter]]
             [clojure.tools.logging :as log])
-  (:import (io.opencensus.trace Tracing AttributeValue)
-           (io.opencensus.trace.samplers Samplers)))
+  (:import (io.opencensus.trace Tracing AttributeValue Tracer Span SpanContext SpanBuilder)
+           (io.opencensus.trace.samplers Samplers)
+           (io.opencensus.trace.config TraceConfig TraceParams$Builder)
+           (io.opencensus.trace.propagation TextFormat)))
 
 ; these have to be "public" because the macros use them. They're not actually "public".
-(def ^:no-doc tracer
+(def ^:no-doc ^Tracer tracer
   "NOTE public because the macros use it; not to actually be consumed by clients"
   (Tracing/getTracer))
 
-(def ^{:dynamic true :no-doc true} current-span
+(def ^{:dynamic true :no-doc true} ^Span current-span
   "NOTE public because the macros use it; not to actually be consumed by clients"
   nil)
 
@@ -24,10 +26,10 @@
 
   all of which are proxied through to the [TraceParams](https://static.javadoc.io/io.opencensus/opencensus-api/0.13.0/io/opencensus/trace/config/TraceParams.html) class."
   [{:keys [probability max-annotations max-attributes max-links max-message-events]}]
-  (let [trace-config (Tracing/getTraceConfig)
-        new-params-builder (-> trace-config
-                               (.getActiveTraceParams)
-                               (.toBuilder))]
+  (let [^TraceConfig trace-config (Tracing/getTraceConfig)
+        ^TraceParams$Builder new-params-builder (-> trace-config
+                                                    (.getActiveTraceParams)
+                                                    (.toBuilder))]
     (do
       (when (some? probability)
         (.setSampler new-params-builder (Samplers/probabilitySampler probability)))
@@ -53,7 +55,7 @@
 
     - `:k` tag name
     - `:v` tag value. Natively supported types are long, bool or string"
-  [k v]
+  [^String k ^Object v]
   (.putAttribute
     current-span
     k
@@ -73,7 +75,7 @@
 (defn make-downstream-headers
   "Produces B3 style headers for the current span, to be passed down into further RPCs for distributed tracing."
   []
-  (let [b3-format (-> (Tracing/getPropagationComponent) (.getB3Format))
+  (let [^TextFormat b3-format (-> (Tracing/getPropagationComponent) (.getB3Format))
         builder (transient {})]
     (.inject b3-format (.getContext current-span) builder b3-setter)
     (persistent! builder)))
@@ -84,15 +86,15 @@
 
   It is expected that clients should mostly use the 2-arg form and the 3-ard form is called from the Ring middleware
   handling the deserialization of the context from B3 headers, however, if you're not using Ring, this might be useful."
-  ([span-name code]
-   `(let [span-builder# (.spanBuilder tracer ~span-name)]
+  ([^String span-name code]
+   `(let [^SpanBuilder span-builder# (.spanBuilder tracer ~span-name)]
       (log/debug "building span " ~span-name)
       (with-open [scope# (.startScopedSpan span-builder#)]
         (binding [current-span (.getCurrentSpan tracer)]
           ~code))))
 
-  ([span-name code remote]
-   `(let [span-builder# (.spanBuilderWithRemoteParent tracer ~span-name ~remote)]
+  ([^String span-name code ^SpanContext remote]
+   `(let [^SpanBuilder span-builder# (.spanBuilderWithRemoteParent tracer ~span-name ~remote)]
       (log/debug "building span " ~span-name " with remote parent")
       (with-open [scope# (.startScopedSpan span-builder#)]
         (binding [current-span (.getCurrentSpan tracer)]

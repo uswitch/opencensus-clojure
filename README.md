@@ -79,21 +79,33 @@ The function returns a `{str str}`, which is what most HTTP clients understand
 
 ### Reporting
 
-There are two reporters available, the `logging` one,
+There are multiple reporters available.
+
+The `logging` one
 ```clojure
 (opencensus-clojure.reporting.logging/report)
 ```
 
-and the Jaeger one.
+The Jaeger one
 ```clojure
 (opencensus-clojure.reporting.jaeger/report "my-service-name")
 
-; allows you to specify the Thrift HTTP endpoint manually. You almost certainly don't need this.
+; allows you to specify the Thrift HTTP endpoint manually
 (opencensus-clojure.reporting.jaeger/report "http://localhost:14268/api/traces" "my-service-name")
 ```
 
-The logging one is nice to figure out if your stuff is working in the first place if your Jaeger thing seems
-to not be. Jaeger is, however, what we have on Kube and you can launch a batteries included version via
+The Zipkin one
+```clojure
+(opencensus-clojure.reporting.zipkin/report "my-service-name")
+
+; allows you to specify the HTTP endpoint manually
+(opencensus-clojure.reporting.jaeger/report "http://localhost:9411/api/v2/spans" "my-service-name")
+```
+
+The logging one is nice to figure out if your stuff is working in the first place if your Jaeger or Zipkin thing seems
+to not be. 
+
+You can launch a batteries included Jaeger thing via
 ```shell
 $ docker run --rm -i \
   -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
@@ -103,6 +115,8 @@ $ docker run --rm -i \
 ```
 It should come up with a UI on `localhost:16686`, and you should see all your traces there.
 
+Launching a local Zipkin handler is up to you.
+
 #### Configuration
 
 The traces are probabilistic by default; you can configure the tracer to `p=1.0` via
@@ -110,10 +124,10 @@ The traces are probabilistic by default; you can configure the tracer to `p=1.0`
 (opencensus-clojure.trace/configure-tracer {:probability 1.0})
 ```
 to force sampling. The configuration function also takes
-- max-annotations
-- max-attributes
-- max-links
-- max-message-events
+- `max-annotations`
+- `max-attributes`
+- `max-links`
+- `max-message-events`
 
 ## Disclaimer
 

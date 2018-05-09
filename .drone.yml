@@ -7,5 +7,6 @@ pipeline:
       event: push
     commands:
       - lein deps
+      - lein codox
       - lein jar
       - lein deploy clojars

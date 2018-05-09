@@ -1,4 +1,6 @@
-(ns opencensus-clojure.propagation
+(ns ^:no-doc opencensus-clojure.propagation
+  "Contains implementations to [de]serialize `SpanContext`s to / from B3 headers. These are almost certainly not the
+  droids you're looking for."
   (:refer-clojure :rename {get core-get
                            set core-set})
   (:require [clojure.string :as str])

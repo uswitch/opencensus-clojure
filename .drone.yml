@@ -23,11 +23,17 @@ pipeline:
       - mv .docs/* . && rmdir .docs
 
   push-gh-pages:
-    image: registry.usw.co/drone/deployment
+    image: registry.usw.co/drone/deployment:latest
     when:
       branch: master
       event: push
     commands:
+      - |
+        cat > ~/.netrc <<EOL
+        machine ${DRONE_NETRC_MACHINE}
+        login ${DRONE_NETRC_USERNAME}
+        password ${DRONE_NETRC_PASSWORD}
+        EOL
       - git config user.name dodgydrone
       - git config user.email drone@drone.drone
       - git checkout --orphan gh-pages

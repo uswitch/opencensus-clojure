@@ -11,7 +11,7 @@ pipeline:
       - lein jar
       - lein deploy clojars
 
-  push-gh-pages:
+  build-gh-pages:
     image: registry.usw.co/uswitch/clojure
     when:
       branch: master
@@ -21,6 +21,13 @@ pipeline:
       - mkdir .docs && mv target/doc/* .docs/
       - rm -r * && rm .gitignore && rm .drone.yml
       - mv .docs/* . && rmdir .docs
+
+  push-gh-pages:
+    image: registry.usw.co/drone/deployment
+    when:
+      branch: master
+      event: push
+    commands:
       - git checkout --orphan gh-pages
       - git add .
       - git commit -m "dox"

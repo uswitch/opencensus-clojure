@@ -7,6 +7,8 @@
         :url  "https://github.com/uswitch/opencensus-java"}
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
+  :plugins [[lein-codox "0.10.3"]]
+  :codox {:metadata {:doc/format :markdown}}
   :dependencies [[org.clojure/clojure "1.9.0" :scope "provided"]
                  [org.clojure/tools.logging "0.4.0"]
                  [io.opencensus/opencensus-api "0.13.1"]

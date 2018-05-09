@@ -3,7 +3,9 @@
   (:import (io.opencensus.exporter.trace.logging LoggingTraceExporter)))
 
 
-(defn report []
+(defn report
+  "Reports your spans via logging. Useful for debugging, to see that your spans actually work."
+  []
   (do
     (log/info "starting logging reporter")
     (LoggingTraceExporter/register)))

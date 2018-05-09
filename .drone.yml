@@ -7,5 +7,21 @@ pipeline:
       event: push
     commands:
       - lein deps
+      - lein codox
       - lein jar
       - lein deploy clojars
+
+  push-gh-pages:
+    image: registry.usw.co/uswitch/clojure
+    when:
+      branch: master
+      event: push
+    commands:
+      - lein codox
+      - mkdir .docs && mv target/doc/* .docs/
+      - rm -r * && rm .gitignore && rm .drone.yml
+      - mv .docs/* . && rmdir .docs
+      - git checkout --orphan gh-pages
+      - git add .
+      - git commit -m "dox"
+      - git push -f origin gh-pages

@@ -32,16 +32,9 @@ pipeline:
       - git add .
       - git commit -m "dox"
 
-  output-a-thing:
-    image: plugins/git
-    when:
-      event: push
-    commands:
-      - echo $${DRONE_NETRC_MACHINE}
-      - echo $${DRONE_NETRC_USERNAME}
-
   git_push:
     image: appleboy/drone-git-push
+    secrets: [ GIT_PUSH_SSH_KEY ]
     when:
       event: push
     remote_name: origin

@@ -32,6 +32,14 @@ pipeline:
       - git add .
       - git commit -m "dox"
 
+  output-a-thing:
+    image: plugins/git
+    when:
+      event: push
+    commands:
+      - echo $DRONE_NETRC_MACHINE
+      - echo $DRONE_NETRC_USERNAME
+
   git_push:
     image: appleboy/drone-git-push
     when:
@@ -39,3 +47,4 @@ pipeline:
     remote_name: origin
     branch: gh-pages
     local_ref: gh-pages
+    force: true

@@ -37,8 +37,8 @@ pipeline:
     when:
       event: push
     commands:
-      - echo $DRONE_NETRC_MACHINE
-      - echo $DRONE_NETRC_USERNAME
+      - echo $${DRONE_NETRC_MACHINE}
+      - echo $${DRONE_NETRC_USERNAME}
 
   git_push:
     image: appleboy/drone-git-push

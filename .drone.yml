@@ -14,7 +14,6 @@ pipeline:
   build-gh-pages:
     image: registry.usw.co/uswitch/clojure
     when:
-      branch: master
       event: push
     commands:
       - lein codox
@@ -25,7 +24,6 @@ pipeline:
   commit-gh-pages:
     image: plugins/git
     when:
-      branch: master
       event: push
     commands:
       - git config user.name dodgydrone
@@ -34,8 +32,10 @@ pipeline:
       - git add .
       - git commit -m "dox"
 
-   git_push:
-     image: appleboy/drone-git-push
-     remote_name: origin
-     branch: gh-pages
-     local_ref: gh-pages
+  git_push:
+    image: appleboy/drone-git-push
+    when:
+      event: push
+    remote_name: origin
+    branch: gh-pages
+    local_ref: gh-pages

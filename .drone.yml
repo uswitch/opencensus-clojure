@@ -19,6 +19,7 @@ pipeline:
   build-gh-pages:
     image: registry.usw.co/uswitch/clojure
     when:
+      branch: master
       event: push
     commands:
       - lein codox
@@ -29,6 +30,7 @@ pipeline:
   commit-gh-pages:
     image: plugins/git
     when:
+      branch: master
       event: push
     commands:
       - git config user.name dodgydrone
@@ -41,6 +43,7 @@ pipeline:
     image: appleboy/drone-git-push
     secrets: [ GIT_PUSH_SSH_KEY ]
     when:
+      branch: master
       event: push
     remote: git@github.com:uswitch/opencensus-clojure.git
     branch: gh-pages

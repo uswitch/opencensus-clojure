@@ -1,3 +1,7 @@
+clone:
+  image: plugins/git
+  depth: 1
+
 pipeline:
   release:
     image: registry.usw.co/uswitch/clojure
@@ -37,7 +41,7 @@ pipeline:
     secrets: [ GIT_PUSH_SSH_KEY ]
     when:
       event: push
-    remote_name: origin
+    remote: git@github.com:uswitch/opencensus-clojure.git
     branch: gh-pages
     local_ref: gh-pages
     force: true

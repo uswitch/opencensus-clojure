@@ -12,3 +12,7 @@
    (do
      (log/info "starting Jaeger reporter")
      (JaegerTraceExporter/createAndRegister endpoint service-name))))
+
+(defn shutdown []
+  "Unregisters the trace exporter"
+  (JaegerTraceExporter/unregister))

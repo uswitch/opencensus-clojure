@@ -11,3 +11,7 @@
   ([^String endpoint ^String service-name] (do
                              (log/info "starting Zipkin reporter")
                              (ZipkinTraceExporter/createAndRegister endpoint service-name))))
+
+(defn shutdown []
+  "Unregisters the trace exporter"
+  (ZipkinTraceExporter/unregister))

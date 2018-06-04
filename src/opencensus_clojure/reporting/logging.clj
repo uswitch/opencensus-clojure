@@ -9,3 +9,7 @@
   (do
     (log/info "starting logging reporter")
     (LoggingTraceExporter/register)))
+
+(defn shutdown []
+  "Unregisters the trace exporter"
+  (LoggingTraceExporter/unregister))

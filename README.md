@@ -15,7 +15,7 @@ Add the latest
 [![Clojars Project](http://clojars.org/uswitch/opencensus-clojure/latest-version.svg)](http://clojars.org/uswitch/opencensus-clojure) 
 
 to your build tool of choice, **AND** add your preferred exporter lib, e.g.,
-`[io.opencensus/opencensus-exporter-trace-zipkin "0.13.1"]`. This is because there are at least 5 exporters and we don't
+`[io.opencensus/opencensus-exporter-trace-zipkin "0.19.2"]`. This is because there are at least 5 exporters and we don't
 want to pull in a boatload of unneeded transitives.
 
 ### Ring

@@ -41,11 +41,11 @@ pipeline:
 
   git_push:
     image: appleboy/drone-git-push
-    secrets: [ GIT_PUSH_SSH_KEY ]
+    secrets: [ DRONE_NETRC_USERNAME, DRONE_NETRC_PASSWORD ]
     when:
       branch: master
       event: push
-    remote: git@github.com:uswitch/opencensus-clojure.git
+    remote: https://github.com:uswitch/opencensus-clojure.git
     branch: gh-pages
     local_ref: gh-pages
     force: true

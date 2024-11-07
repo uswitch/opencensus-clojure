@@ -1,3 +1,13 @@
+# DEPRECATED and ARCHIVED.
+
+See 
+https://github.com/uswitch/service-standard-clj 
+
+and 
+https://github.com/uswitch/service-standard-clj/blob/main/src/uswitch_service_standard/tracing/tracing.md
+
+
+
 # opencensus-clojure
 
 A Clojure library designed to pass butter.
